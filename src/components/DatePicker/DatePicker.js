@@ -11,7 +11,7 @@ import {
 
 const DATE_FORMAT = "DD/MM/yyyy";
 
-const DatePicker = ({ label, value, onChange, minDate }) => {
+const DatePicker = ({ label, value, onChange, minDate, maxDate }) => {
   const handleChange = (date) => {
     onChange(date);
   };
@@ -34,6 +34,7 @@ const DatePicker = ({ label, value, onChange, minDate }) => {
             "aria-label": "change date",
           }}
           minDate={minDate}
+          maxDate={maxDate}
         />
       </Grid>
     </MuiPickersUtilsProvider>
@@ -42,7 +43,8 @@ const DatePicker = ({ label, value, onChange, minDate }) => {
 
 DatePicker.defaultProps = {
   value: null,
-  minDate: null,
+  minDate: undefined,
+  maxDate: undefined,
 };
 
 DatePicker.propTypes = {
@@ -50,6 +52,7 @@ DatePicker.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: momentPropTypes.momentObj,
   minDate: momentPropTypes.momentObj,
+  maxDate: momentPropTypes.momentObj,
 };
 
 export default DatePicker;

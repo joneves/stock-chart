@@ -29,11 +29,11 @@ const useValidate = (symbol, startDate, endDate) => {
   if (symbol.length === 0) {
     errors.symbol = "Please select 1 - 3 Symbols";
   }
-  if (!moment.isDate(startDate)) {
+  if (!moment(startDate, "YYYY-MM-DD", true).isValid()) {
     errors.startDate = true;
   }
 
-  if (!moment.isDate(endDate)) {
+  if (!moment(endDate, "YYYY-MM-DD", true).isValid()) {
     errors.endDate = true;
   }
 
@@ -92,6 +92,7 @@ const Application = () => {
               label="Start Date"
               value={startDate}
               onChange={handleStartDateChange}
+              maxDate={moment(endDate).add(-1, "day")}
             />
           </FormControl>
         </Grid>
@@ -101,7 +102,7 @@ const Application = () => {
               label="End Date"
               value={endDate}
               onChange={handleEndDateChange}
-              minDate={startDate}
+              minDate={moment(startDate).add(1, "day")}
             />
           </FormControl>
         </Grid>

@@ -49,7 +49,7 @@ const Chart = ({ startDate, endDate, data, type }) => {
     const svg = d3.select(container.current);
     const yMin = getMinY(data);
     const yMax = getMaxY(data);
-    svg.selectAll("g, path").remove();
+    svg.selectAll().remove();
 
     const xScale = d3
       .scaleTime()
@@ -103,12 +103,7 @@ const Chart = ({ startDate, endDate, data, type }) => {
         .attr("stroke-width", "1.5")
         .attr("d", line),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, type]);
 
-  useEffect(() => {
-    const svg = d3.select(container.current);
-    // svg.selectAll("circle, text").remove();
     svg
       .selectAll("dots")
       .data(Object.entries(data))
@@ -140,7 +135,8 @@ const Chart = ({ startDate, endDate, data, type }) => {
       })
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle");
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, type]);
 
   return (
     <div style={{ margin: 50, backgroundColor: "transparent" }}>

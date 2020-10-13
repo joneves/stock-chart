@@ -49,7 +49,7 @@ const Chart = ({ startDate, endDate, data, type }) => {
     const svg = d3.select(container.current);
     const yMin = getMinY(data);
     const yMax = getMaxY(data);
-    svg.selectAll().remove();
+    svg.selectAll("*").remove();
 
     const xScale = d3
       .scaleTime()

@@ -8,6 +8,8 @@
 /.pnp
 .pnp.js
 
+test.code-workspace
+
 # testing
 /coverage
 

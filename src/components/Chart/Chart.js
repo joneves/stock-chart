@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
 import moment from "moment";
+import momentPropTypes from "react-moment-proptypes";
 
 const getMaxY = (data) =>
   Object.keys(data).reduce(
@@ -36,8 +37,10 @@ const transformData = (data, type) => {
 };
 
 const HEIGHT = 400;
-const WIDTH = 1000;
-const MARGIN = 50;
+const WIDTH = 1100;
+const MARGIN = 70;
+
+const COLORS = ["steelblue", "gold", "firebrick"];
 
 const Chart = ({ startDate, endDate, data, type }) => {
   const container = useRef(null);
@@ -46,7 +49,7 @@ const Chart = ({ startDate, endDate, data, type }) => {
     const svg = d3.select(container.current);
     const yMin = getMinY(data);
     const yMax = getMaxY(data);
-    svg.selectAll("*").remove();
+    svg.selectAll("g, path").remove();
 
     const xScale = d3
       .scaleTime()
@@ -90,21 +93,54 @@ const Chart = ({ startDate, endDate, data, type }) => {
       .x((d) => xScale(d.day))
       .y((d) => yScale(d[type]));
 
-    const colors = ["steelblue", "gold", "firebrick"];
-
-    // eslint-disable-next-line guard-for-in
-    Object.values(data).forEach((item) =>
+    Object.values(data).forEach((item, index) =>
       svg
         .append("path")
         .data([transformData(item, type)])
         .style("fill", "none")
         .attr("id", "priceChart")
-        .attr("stroke", colors.pop())
+        .attr("stroke", COLORS[index])
         .attr("stroke-width", "1.5")
         .attr("d", line),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, type]);
+
+  useEffect(() => {
+    const svg = d3.select(container.current);
+    // svg.selectAll("circle, text").remove();
+    svg
+      .selectAll("dots")
+      .data(Object.entries(data))
+      .enter()
+      .append("circle")
+      .attr("cx", 1020)
+      .attr("cy", (d, i) => {
+        return 20 + i * 25;
+      })
+      .attr("r", 7)
+      .style("fill", (d, i) => {
+        return COLORS[i];
+      });
+
+    svg
+      .selectAll("labels")
+      .data(Object.keys(data))
+      .enter()
+      .append("text")
+      .attr("x", 1035)
+      .attr("y", (d, i) => {
+        return 20 + i * 25;
+      })
+      .style("fill", (d, i) => {
+        return COLORS[i];
+      })
+      .text((d) => {
+        return d;
+      })
+      .attr("text-anchor", "left")
+      .style("alignment-baseline", "middle");
+  }, [data]);
 
   return (
     <div style={{ margin: 50, backgroundColor: "transparent" }}>
@@ -114,12 +150,10 @@ const Chart = ({ startDate, endDate, data, type }) => {
 };
 
 Chart.propTypes = {
-  startDate: PropTypes.instanceOf(Date).isRequired,
-  endDate: PropTypes.instanceOf(Date).isRequired,
-  type: PropTypes.shape({
-    [PropTypes.string]: PropTypes.string,
-  }).isRequired,
-  data: PropTypes.shape(PropTypes.any).isRequired,
+  startDate: momentPropTypes.momentObj.isRequired,
+  endDate: momentPropTypes.momentObj.isRequired,
+  type: PropTypes.string.isRequired,
+  data: PropTypes.shape(PropTypes.any.isRequired).isRequired,
 };
 
 export default Chart;
